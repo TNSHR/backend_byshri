@@ -1,23 +1,53 @@
 {
-  "dependencies": {
-    "prettier": "^3.3.3",
-    "update": "^0.7.4"
-  },
+  
   "name": "shri_backend",
+  
   "version": "1.0.0",
+  
   "description": "Shri backend project",
+  
   "main": "index.js",
-  "devDependencies": {
-    "nodemon": "^3.1.7"
-  },
+  
+  "type": "module",
+  
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  
+    
+  "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js"
+  
   },
+  
+  "devDependencies": {
+  
+    
+  "nodemon": "^3.1.7"
+  
+  },
+  
   "keywords": [
-    "javascript",
-    "backend",
-    "shrinath"
+  
+    
+  "javascript",
+  
+    
+  "backend",
+  
+    
+  "shrinath"
+  
   ],
+  
   "author": "Shrinath Sharma",
-  "license": "ISC"
+  
+  "license": "ISC",
+  
+  "dependencies": {
+  
+    
+  "express": "^4.21.1",
+  
+    
+  "moongoose": "^0.0.1"
+  
+  }
 }
