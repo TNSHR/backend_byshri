@@ -299,6 +299,74 @@ const updateUserCoverImage = asyncHandler(async(req,res)=>{
 
 })
 
+const getChannelUserProfile = asyncHandler(async(req,res)=>{
+    const {username} = req.params
+    if (!username?.trim()) {
+        throw new ApiError(400,"username is missing")
+    }
+
+    const channel = await User.aggregate([{
+        $match:{
+            username:username?.toLowerCase()
+        }
+    },{
+        $lookup:{
+            from:"subscription",
+            localField:"_id",
+            foreignField:"channel",
+            as: "subscribers"
+        }
+    },{
+        $lookup:{
+            from:"subscription",
+            localField:"_id",
+            foreignField:"subscriber",
+            as: "subscribedTo"
+        }
+    },{
+        $addFields:{
+            subscribersCount:{
+                $size:"$subscribers"
+            },
+            channelSubscriedToCount:{
+                $size:"$subscribedTo"
+            },
+            isSubscribed:{
+                $cond:{
+                    if:{$in:[req.user?._id,"$subscribers.subscriber"]},
+                    then:
+                        true
+                    ,
+                    else:false
+
+                    
+                }
+            }
+        }
+    },{
+        $project:{
+            fullName:1,
+            username:1,
+            subscribersCount:1,
+            channelSubscriedToCount:1,
+            isSubscribed:1,
+            avatar:1,
+            coverImage:1,
+            email:1
+        }
+    }
+])
+if (!channel?.length) {
+    throw new ApiError(404,"channel does not exits");
+    
+}
+
+return res.status(200)
+.json(new ApiResponce(200,channel[0],"User channel fetched successfully"))
+
+
+})
+
 
 
 export {registerUser, 
@@ -308,4 +376,4 @@ export {registerUser,
     changeCurrentPassword,
     updateAccountDetails,
     updateUserAvatar,
-    updateUserCoverImage}
+    updateUserCoverImage,getChannelUserProfile}
